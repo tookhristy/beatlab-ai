@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { CheckCircle2, ChevronRight, Clock, Zap, ArrowLeft, ExternalLink } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader, Card, Badge, Progress } from "@/components/ui-kit/primitives";
-import { LEVEL_1 } from "@/content/fl-manual/level-1";
+import { LEVEL_1, type Lesson } from "@/content/fl-manual/level-1";
 import { useLevel1Progress } from "@/hooks/useLevel1Progress";
 import { cn } from "@/lib/utils";
 
