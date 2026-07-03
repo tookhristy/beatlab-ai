@@ -2,6 +2,8 @@
 @source "../src";
 @import "tw-animate-css";
 
+@source inline("bg-brand-purple/12 bg-brand-purple/15 bg-brand-purple/10 bg-brand-purple/20 text-brand-purple border-brand-purple/25 border-brand-purple/30 border-brand-purple/50 border-brand-purple/60 bg-brand-blue/12 bg-brand-blue/15 bg-brand-blue/10 bg-brand-blue/50 text-brand-blue border-brand-blue/25 border-brand-blue/30 border-brand-blue/50 bg-brand-green/12 bg-brand-green/15 text-brand-green border-brand-green/25 border-brand-green/30 bg-brand-orange/12 bg-brand-orange/15 bg-brand-orange/25 text-brand-orange border-brand-orange/25 border-brand-orange/30 bg-brand-red/12 bg-brand-red/15 text-brand-red border-brand-red/25 border-brand-red/30");
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
