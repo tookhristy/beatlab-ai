@@ -2,10 +2,18 @@ import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-ro
 import { ArrowLeft, ArrowRight, ExternalLink, Sparkles, Keyboard, Target, BookOpen } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { Card, Badge, Progress } from "@/components/ui-kit/primitives";
-import { LEVEL_1 } from "@/content/fl-manual/level-1";
+import { LEVEL_1, type Lesson } from "@/content/fl-manual/level-1";
 import { useLevel1Progress } from "@/hooks/useLevel1Progress";
 import { QuizBlock } from "@/components/learn/QuizBlock";
 import { TryItChecklist } from "@/components/learn/TryItChecklist";
+
+type LoaderData = {
+  lesson: Lesson;
+  index: number;
+  total: number;
+  prev: Lesson | null;
+  next: Lesson | null;
+};
 
 export const Route = createFileRoute("/learn/$level/$lesson")({
   head: ({ params, loaderData }) => {

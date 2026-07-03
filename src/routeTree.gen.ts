@@ -20,6 +20,7 @@ import { Route as AiProducerRouteImport } from './routes/ai-producer'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LearnLevelRouteImport } from './routes/learn.$level'
+import { Route as LearnLevelLessonRouteImport } from './routes/learn.$level.$lesson'
 
 const TheoryRoute = TheoryRouteImport.update({
   id: '/theory',
@@ -76,6 +77,11 @@ const LearnLevelRoute = LearnLevelRouteImport.update({
   path: '/learn/$level',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnLevelLessonRoute = LearnLevelLessonRouteImport.update({
+  id: '/$lesson',
+  path: '/$lesson',
+  getParentRoute: () => LearnLevelRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -87,8 +93,9 @@ export interface FileRoutesByFullPath {
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
-  '/learn/$level': typeof LearnLevelRoute
+  '/learn/$level': typeof LearnLevelRouteWithChildren
   '/learn/': typeof LearnIndexRoute
+  '/learn/$level/$lesson': typeof LearnLevelLessonRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -100,8 +107,9 @@ export interface FileRoutesByTo {
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
-  '/learn/$level': typeof LearnLevelRoute
+  '/learn/$level': typeof LearnLevelRouteWithChildren
   '/learn': typeof LearnIndexRoute
+  '/learn/$level/$lesson': typeof LearnLevelLessonRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -114,8 +122,9 @@ export interface FileRoutesById {
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
-  '/learn/$level': typeof LearnLevelRoute
+  '/learn/$level': typeof LearnLevelRouteWithChildren
   '/learn/': typeof LearnIndexRoute
+  '/learn/$level/$lesson': typeof LearnLevelLessonRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
     | '/theory'
     | '/learn/$level'
     | '/learn/'
+    | '/learn/$level/$lesson'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/theory'
     | '/learn/$level'
     | '/learn'
+    | '/learn/$level/$lesson'
   id:
     | '__root__'
     | '/'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/theory'
     | '/learn/$level'
     | '/learn/'
+    | '/learn/$level/$lesson'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -169,7 +181,7 @@ export interface RootRouteChildren {
   ProgressRoute: typeof ProgressRoute
   SettingsRoute: typeof SettingsRoute
   TheoryRoute: typeof TheoryRoute
-  LearnLevelRoute: typeof LearnLevelRoute
+  LearnLevelRoute: typeof LearnLevelRouteWithChildren
   LearnIndexRoute: typeof LearnIndexRoute
 }
 
@@ -252,8 +264,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnLevelRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/$level/$lesson': {
+      id: '/learn/$level/$lesson'
+      path: '/$lesson'
+      fullPath: '/learn/$level/$lesson'
+      preLoaderRoute: typeof LearnLevelLessonRouteImport
+      parentRoute: typeof LearnLevelRoute
+    }
   }
 }
+
+interface LearnLevelRouteChildren {
+  LearnLevelLessonRoute: typeof LearnLevelLessonRoute
+}
+
+const LearnLevelRouteChildren: LearnLevelRouteChildren = {
+  LearnLevelLessonRoute: LearnLevelLessonRoute,
+}
+
+const LearnLevelRouteWithChildren = LearnLevelRoute._addFileChildren(
+  LearnLevelRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -265,7 +296,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgressRoute: ProgressRoute,
   SettingsRoute: SettingsRoute,
   TheoryRoute: TheoryRoute,
-  LearnLevelRoute: LearnLevelRoute,
+  LearnLevelRoute: LearnLevelRouteWithChildren,
   LearnIndexRoute: LearnIndexRoute,
 }
 export const routeTree = rootRouteImport
