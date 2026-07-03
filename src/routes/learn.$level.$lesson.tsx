@@ -77,7 +77,7 @@ function LessonError({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 function LessonPage() {
-  const { lesson, index, total, prev, next } = Route.useLoaderData();
+  const { lesson, index, total, prev, next } = Route.useLoaderData() as LoaderData;
   const { complete, isDone } = useLevel1Progress();
   const navigate = useNavigate();
   const pct = Math.round(((index + 1) / total) * 100);
