@@ -19,6 +19,7 @@ import { Route as BeatRecipesRouteImport } from './routes/beat-recipes'
 import { Route as AiProducerRouteImport } from './routes/ai-producer'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as LearnLevelRouteImport } from './routes/learn.$level'
 
 const TheoryRoute = TheoryRouteImport.update({
   id: '/theory',
@@ -70,6 +71,11 @@ const LearnIndexRoute = LearnIndexRouteImport.update({
   path: '/learn/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnLevelRoute = LearnLevelRouteImport.update({
+  id: '/learn/$level',
+  path: '/learn/$level',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
+  '/learn/$level': typeof LearnLevelRoute
   '/learn/': typeof LearnIndexRoute
 }
 export interface FileRoutesByTo {
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
+  '/learn/$level': typeof LearnLevelRoute
   '/learn': typeof LearnIndexRoute
 }
 export interface FileRoutesById {
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
+  '/learn/$level': typeof LearnLevelRoute
   '/learn/': typeof LearnIndexRoute
 }
 export interface FileRouteTypes {
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/settings'
     | '/theory'
+    | '/learn/$level'
     | '/learn/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/settings'
     | '/theory'
+    | '/learn/$level'
     | '/learn'
   id:
     | '__root__'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/settings'
     | '/theory'
+    | '/learn/$level'
     | '/learn/'
   fileRoutesById: FileRoutesById
 }
@@ -157,6 +169,7 @@ export interface RootRouteChildren {
   ProgressRoute: typeof ProgressRoute
   SettingsRoute: typeof SettingsRoute
   TheoryRoute: typeof TheoryRoute
+  LearnLevelRoute: typeof LearnLevelRoute
   LearnIndexRoute: typeof LearnIndexRoute
 }
 
@@ -232,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/$level': {
+      id: '/learn/$level'
+      path: '/learn/$level'
+      fullPath: '/learn/$level'
+      preLoaderRoute: typeof LearnLevelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -245,6 +265,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgressRoute: ProgressRoute,
   SettingsRoute: SettingsRoute,
   TheoryRoute: TheoryRoute,
+  LearnLevelRoute: LearnLevelRoute,
   LearnIndexRoute: LearnIndexRoute,
 }
 export const routeTree = rootRouteImport
