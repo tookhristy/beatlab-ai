@@ -15,10 +15,12 @@ import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as PluginsRouteImport } from './routes/plugins'
-import { Route as LearnRouteImport } from './routes/learn'
 import { Route as BeatRecipesRouteImport } from './routes/beat-recipes'
 import { Route as AiProducerRouteImport } from './routes/ai-producer'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as LearnLevelRouteImport } from './routes/learn.$level'
+import { Route as LearnLevelLessonRouteImport } from './routes/learn.$level.$lesson'
 
 const TheoryRoute = TheoryRouteImport.update({
   id: '/theory',
@@ -50,11 +52,6 @@ const PluginsRoute = PluginsRouteImport.update({
   path: '/plugins',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LearnRoute = LearnRouteImport.update({
-  id: '/learn',
-  path: '/learn',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BeatRecipesRoute = BeatRecipesRouteImport.update({
   id: '/beat-recipes',
   path: '/beat-recipes',
@@ -70,43 +67,64 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnIndexRoute = LearnIndexRouteImport.update({
+  id: '/learn/',
+  path: '/learn/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnLevelRoute = LearnLevelRouteImport.update({
+  id: '/learn/$level',
+  path: '/learn/$level',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnLevelLessonRoute = LearnLevelLessonRouteImport.update({
+  id: '/$lesson',
+  path: '/$lesson',
+  getParentRoute: () => LearnLevelRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ai-producer': typeof AiProducerRoute
   '/beat-recipes': typeof BeatRecipesRoute
-  '/learn': typeof LearnRoute
   '/plugins': typeof PluginsRoute
   '/practice': typeof PracticeRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
+  '/learn/$level': typeof LearnLevelRouteWithChildren
+  '/learn/': typeof LearnIndexRoute
+  '/learn/$level/$lesson': typeof LearnLevelLessonRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-producer': typeof AiProducerRoute
   '/beat-recipes': typeof BeatRecipesRoute
-  '/learn': typeof LearnRoute
   '/plugins': typeof PluginsRoute
   '/practice': typeof PracticeRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
+  '/learn/$level': typeof LearnLevelRouteWithChildren
+  '/learn': typeof LearnIndexRoute
+  '/learn/$level/$lesson': typeof LearnLevelLessonRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/ai-producer': typeof AiProducerRoute
   '/beat-recipes': typeof BeatRecipesRoute
-  '/learn': typeof LearnRoute
   '/plugins': typeof PluginsRoute
   '/practice': typeof PracticeRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
+  '/learn/$level': typeof LearnLevelRouteWithChildren
+  '/learn/': typeof LearnIndexRoute
+  '/learn/$level/$lesson': typeof LearnLevelLessonRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -114,50 +132,57 @@ export interface FileRouteTypes {
     | '/'
     | '/ai-producer'
     | '/beat-recipes'
-    | '/learn'
     | '/plugins'
     | '/practice'
     | '/profile'
     | '/progress'
     | '/settings'
     | '/theory'
+    | '/learn/$level'
+    | '/learn/'
+    | '/learn/$level/$lesson'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/ai-producer'
     | '/beat-recipes'
-    | '/learn'
     | '/plugins'
     | '/practice'
     | '/profile'
     | '/progress'
     | '/settings'
     | '/theory'
+    | '/learn/$level'
+    | '/learn'
+    | '/learn/$level/$lesson'
   id:
     | '__root__'
     | '/'
     | '/ai-producer'
     | '/beat-recipes'
-    | '/learn'
     | '/plugins'
     | '/practice'
     | '/profile'
     | '/progress'
     | '/settings'
     | '/theory'
+    | '/learn/$level'
+    | '/learn/'
+    | '/learn/$level/$lesson'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AiProducerRoute: typeof AiProducerRoute
   BeatRecipesRoute: typeof BeatRecipesRoute
-  LearnRoute: typeof LearnRoute
   PluginsRoute: typeof PluginsRoute
   PracticeRoute: typeof PracticeRoute
   ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
   SettingsRoute: typeof SettingsRoute
   TheoryRoute: typeof TheoryRoute
+  LearnLevelRoute: typeof LearnLevelRouteWithChildren
+  LearnIndexRoute: typeof LearnIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -204,13 +229,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PluginsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/learn': {
-      id: '/learn'
-      path: '/learn'
-      fullPath: '/learn'
-      preLoaderRoute: typeof LearnRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/beat-recipes': {
       id: '/beat-recipes'
       path: '/beat-recipes'
@@ -232,20 +250,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/': {
+      id: '/learn/'
+      path: '/learn'
+      fullPath: '/learn/'
+      preLoaderRoute: typeof LearnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/$level': {
+      id: '/learn/$level'
+      path: '/learn/$level'
+      fullPath: '/learn/$level'
+      preLoaderRoute: typeof LearnLevelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn/$level/$lesson': {
+      id: '/learn/$level/$lesson'
+      path: '/$lesson'
+      fullPath: '/learn/$level/$lesson'
+      preLoaderRoute: typeof LearnLevelLessonRouteImport
+      parentRoute: typeof LearnLevelRoute
+    }
   }
 }
+
+interface LearnLevelRouteChildren {
+  LearnLevelLessonRoute: typeof LearnLevelLessonRoute
+}
+
+const LearnLevelRouteChildren: LearnLevelRouteChildren = {
+  LearnLevelLessonRoute: LearnLevelLessonRoute,
+}
+
+const LearnLevelRouteWithChildren = LearnLevelRoute._addFileChildren(
+  LearnLevelRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AiProducerRoute: AiProducerRoute,
   BeatRecipesRoute: BeatRecipesRoute,
-  LearnRoute: LearnRoute,
   PluginsRoute: PluginsRoute,
   PracticeRoute: PracticeRoute,
   ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
   SettingsRoute: SettingsRoute,
   TheoryRoute: TheoryRoute,
+  LearnLevelRoute: LearnLevelRouteWithChildren,
+  LearnIndexRoute: LearnIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
