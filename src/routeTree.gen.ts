@@ -9,8 +9,62 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TheoryRouteImport } from './routes/theory'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PracticeRouteImport } from './routes/practice'
+import { Route as PluginsRouteImport } from './routes/plugins'
+import { Route as LearnRouteImport } from './routes/learn'
+import { Route as BeatRecipesRouteImport } from './routes/beat-recipes'
+import { Route as AiProducerRouteImport } from './routes/ai-producer'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TheoryRoute = TheoryRouteImport.update({
+  id: '/theory',
+  path: '/theory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgressRoute = ProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PracticeRoute = PracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PluginsRoute = PluginsRouteImport.update({
+  id: '/plugins',
+  path: '/plugins',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BeatRecipesRoute = BeatRecipesRouteImport.update({
+  id: '/beat-recipes',
+  path: '/beat-recipes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiProducerRoute = AiProducerRouteImport.update({
+  id: '/ai-producer',
+  path: '/ai-producer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +73,158 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-producer': typeof AiProducerRoute
+  '/beat-recipes': typeof BeatRecipesRoute
+  '/learn': typeof LearnRoute
+  '/plugins': typeof PluginsRoute
+  '/practice': typeof PracticeRoute
+  '/profile': typeof ProfileRoute
+  '/progress': typeof ProgressRoute
+  '/settings': typeof SettingsRoute
+  '/theory': typeof TheoryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-producer': typeof AiProducerRoute
+  '/beat-recipes': typeof BeatRecipesRoute
+  '/learn': typeof LearnRoute
+  '/plugins': typeof PluginsRoute
+  '/practice': typeof PracticeRoute
+  '/profile': typeof ProfileRoute
+  '/progress': typeof ProgressRoute
+  '/settings': typeof SettingsRoute
+  '/theory': typeof TheoryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai-producer': typeof AiProducerRoute
+  '/beat-recipes': typeof BeatRecipesRoute
+  '/learn': typeof LearnRoute
+  '/plugins': typeof PluginsRoute
+  '/practice': typeof PracticeRoute
+  '/profile': typeof ProfileRoute
+  '/progress': typeof ProgressRoute
+  '/settings': typeof SettingsRoute
+  '/theory': typeof TheoryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/ai-producer'
+    | '/beat-recipes'
+    | '/learn'
+    | '/plugins'
+    | '/practice'
+    | '/profile'
+    | '/progress'
+    | '/settings'
+    | '/theory'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/ai-producer'
+    | '/beat-recipes'
+    | '/learn'
+    | '/plugins'
+    | '/practice'
+    | '/profile'
+    | '/progress'
+    | '/settings'
+    | '/theory'
+  id:
+    | '__root__'
+    | '/'
+    | '/ai-producer'
+    | '/beat-recipes'
+    | '/learn'
+    | '/plugins'
+    | '/practice'
+    | '/profile'
+    | '/progress'
+    | '/settings'
+    | '/theory'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiProducerRoute: typeof AiProducerRoute
+  BeatRecipesRoute: typeof BeatRecipesRoute
+  LearnRoute: typeof LearnRoute
+  PluginsRoute: typeof PluginsRoute
+  PracticeRoute: typeof PracticeRoute
+  ProfileRoute: typeof ProfileRoute
+  ProgressRoute: typeof ProgressRoute
+  SettingsRoute: typeof SettingsRoute
+  TheoryRoute: typeof TheoryRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/theory': {
+      id: '/theory'
+      path: '/theory'
+      fullPath: '/theory'
+      preLoaderRoute: typeof TheoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progress': {
+      id: '/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof ProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/practice': {
+      id: '/practice'
+      path: '/practice'
+      fullPath: '/practice'
+      preLoaderRoute: typeof PracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plugins': {
+      id: '/plugins'
+      path: '/plugins'
+      fullPath: '/plugins'
+      preLoaderRoute: typeof PluginsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/beat-recipes': {
+      id: '/beat-recipes'
+      path: '/beat-recipes'
+      fullPath: '/beat-recipes'
+      preLoaderRoute: typeof BeatRecipesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-producer': {
+      id: '/ai-producer'
+      path: '/ai-producer'
+      fullPath: '/ai-producer'
+      preLoaderRoute: typeof AiProducerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +237,16 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiProducerRoute: AiProducerRoute,
+  BeatRecipesRoute: BeatRecipesRoute,
+  LearnRoute: LearnRoute,
+  PluginsRoute: PluginsRoute,
+  PracticeRoute: PracticeRoute,
+  ProfileRoute: ProfileRoute,
+  ProgressRoute: ProgressRoute,
+  SettingsRoute: SettingsRoute,
+  TheoryRoute: TheoryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
