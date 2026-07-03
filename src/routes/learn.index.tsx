@@ -1,7 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader, Card, Badge, Progress } from "@/components/ui-kit/primitives";
 import { Lock, CheckCircle2, Play, Clock, Zap } from "lucide-react";
+import { useLevel1Progress } from "@/hooks/useLevel1Progress";
+import { LEVEL_1 } from "@/content/fl-manual/level-1";
 
 export const Route = createFileRoute("/learn/")({
   component: LearnPage,
