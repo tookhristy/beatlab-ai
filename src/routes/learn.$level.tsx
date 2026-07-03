@@ -32,6 +32,7 @@ export const Route = createFileRoute("/learn/$level")({
 
 function LevelPage() {
   const level = LEVEL_1;
+  const lessons: Lesson[] = level.lessons;
   const { isDone, doneCount, reset } = useLevel1Progress();
   const total = level.lessons.length;
   const pct = Math.round((doneCount / total) * 100);
