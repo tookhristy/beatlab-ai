@@ -45,7 +45,7 @@ function LevelPage() {
         <ArrowLeft className="w-4 h-4" /> Roadmap
       </Link>
 
-      <PageHeader title={`Level ${level.n} · ${level.title}`} subtitle={level.subtitle} />
+      <PageHeader title={`Level ${LEVEL_1.n} · ${LEVEL_1.title}`} subtitle={LEVEL_1.subtitle} />
 
       <Card className="mb-6">
         <div className="flex items-center justify-between gap-4 flex-wrap">
