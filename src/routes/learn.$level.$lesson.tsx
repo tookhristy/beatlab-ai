@@ -17,23 +17,19 @@ type LoaderData = {
 
 export const Route = createFileRoute("/learn/$level/$lesson")({
   head: ({ params, loaderData }) => {
-    const title = loaderData?.lesson.title ?? "Lesson";
+    const data = loaderData as LoaderData | undefined;
+    const title = data?.lesson.title ?? "Lesson";
+    const desc = data?.lesson.short ?? "FL Studio lesson on learnbeats.app.";
     return {
       meta: [
         { title: `${title} — Level ${params.level} · learnbeats.app` },
-        {
-          name: "description",
-          content: loaderData?.lesson.short ?? "FL Studio lesson on learnbeats.app.",
-        },
+        { name: "description", content: desc },
         { property: "og:title", content: `${title} — Level ${params.level} · learnbeats.app` },
-        {
-          property: "og:description",
-          content: loaderData?.lesson.short ?? "FL Studio lesson on learnbeats.app.",
-        },
+        { property: "og:description", content: desc },
       ],
     };
   },
-  loader: ({ params }) => {
+  loader: ({ params }): LoaderData => {
     if (params.level !== "1") throw notFound();
     const idx = LEVEL_1.lessons.findIndex((l) => l.slug === params.lesson);
     if (idx === -1) throw notFound();
