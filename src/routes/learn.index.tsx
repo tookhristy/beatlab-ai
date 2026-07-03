@@ -3,7 +3,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader, Card, Badge, Progress } from "@/components/ui-kit/primitives";
 import { Lock, CheckCircle2, Play, Clock, Zap } from "lucide-react";
 
-export const Route = createFileRoute("/learn")({
+export const Route = createFileRoute("/learn/")({
   component: LearnPage,
 });
 
