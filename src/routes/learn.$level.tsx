@@ -32,9 +32,9 @@ export const Route = createFileRoute("/learn/$level")({
 
 function LevelPage() {
   const level = LEVEL_1;
-  const lessons: Lesson[] = level.lessons;
+  const lessons: Lesson[] = lessons;
   const { isDone, doneCount, reset } = useLevel1Progress();
-  const total = level.lessons.length;
+  const total = lessons.length;
   const pct = Math.round((doneCount / total) * 100);
 
   return (
@@ -62,7 +62,7 @@ function LevelPage() {
             </Badge>
             <Badge color="muted">
               <Clock className="w-3 h-3" />
-              ~{level.lessons.reduce((s, l) => s + l.minutes, 0)} min
+              ~{lessons.reduce((s, l) => s + l.minutes, 0)} min
             </Badge>
             {doneCount > 0 && (
               <button
@@ -80,9 +80,9 @@ function LevelPage() {
       </Card>
 
       <ol className="relative border-l border-border/60 ml-3 space-y-3">
-        {level.lessons.map((lesson, i) => {
+        {lessons.map((lesson, i) => {
           const done = isDone(lesson.slug);
-          const prevDone = i === 0 || isDone(level.lessons[i - 1].slug);
+          const prevDone = i === 0 || isDone(lessons[i - 1].slug);
           const isLocked = !done && !prevDone;
 
           const dotCls = cn(
