@@ -77,14 +77,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "BeatBuilder AI — Learn FL Studio with a personal AI producer" },
+      { title: "learnbeats.app — Learn FL Studio with a personal AI producer" },
       {
         name: "description",
         content:
-          "BeatBuilder AI teaches you FL Studio like a personal producer sitting beside you. Interactive lessons, practice challenges, AI coaching, and gamified progress.",
+          "learnbeats.app teaches you FL Studio like a personal producer sitting beside you. Interactive lessons, practice challenges, AI coaching, and gamified progress.",
       },
       { name: "theme-color", content: "#0B0B0F" },
-      { property: "og:title", content: "BeatBuilder AI" },
+      { property: "og:title", content: "learnbeats.app" },
       {
         property: "og:description",
         content:

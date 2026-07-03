@@ -38,7 +38,7 @@ export function Sidebar() {
           <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
         </div>
         <div className="flex flex-col leading-tight">
-          <span className="text-sm font-semibold tracking-tight">BeatBuilder</span>
+          <span className="text-sm font-semibold tracking-tight">learnbeats.app</span>
           <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
             AI Producer
           </span>
