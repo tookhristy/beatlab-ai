@@ -4,10 +4,10 @@ import { CheckCircle2, ChevronRight, Clock, Zap, ArrowLeft, ExternalLink } from 
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader, Card, Badge, Progress } from "@/components/ui-kit/primitives";
 import { LEVEL_1, type Lesson } from "@/content/fl-manual/level-1";
-import { useLevel1Progress } from "@/hooks/useLevel1Progress";
+import { useLevelProgress } from "@/hooks/useLevelProgress";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/learn/$level")({
+export const Route = createFileRoute("/_authenticated/learn/$level")({
   head: ({ params }) => ({
     meta: [
       { title: `Level ${params.level}: ${LEVEL_1.title} — learnbeats.app` },
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/learn/$level")({
 
 function LevelPage() {
   const lessons: Lesson[] = LEVEL_1.lessons;
-  const { isDone, doneCount, reset } = useLevel1Progress();
+  const { isDone, doneCount, xpTotal } = useLevelProgress(1);
   const total = lessons.length;
   const pct = Math.round((doneCount / total) * 100);
 
@@ -57,20 +57,12 @@ function LevelPage() {
           </div>
           <div className="flex items-center gap-2">
             <Badge color="orange">
-              <Zap className="w-3 h-3" /> {total * 40} XP total
+              <Zap className="w-3 h-3" /> {xpTotal} / {lessons.reduce((s, l) => s + l.xp, 0)} XP
             </Badge>
             <Badge color="muted">
               <Clock className="w-3 h-3" />
               ~{lessons.reduce((s, l) => s + l.minutes, 0)} min
             </Badge>
-            {doneCount > 0 && (
-              <button
-                onClick={reset}
-                className="text-xs text-muted-foreground hover:text-foreground transition px-2 py-1"
-              >
-                Reset progress
-              </button>
-            )}
           </div>
         </div>
         <div className="mt-4">
@@ -96,10 +88,7 @@ function LevelPage() {
           const inner = (
             <Card
               interactive={!isLocked}
-              className={cn(
-                "ml-6 transition",
-                isLocked && "opacity-50",
-              )}
+              className={cn("ml-6 transition", isLocked && "opacity-50")}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">

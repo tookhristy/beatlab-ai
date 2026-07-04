@@ -1,4 +1,6 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   GraduationCap,
@@ -12,8 +14,11 @@ import {
   Settings,
   Flame,
   Zap,
+  LogIn,
+  LogOut,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -30,6 +35,8 @@ const nav = [
 
 export function Sidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { signedIn, email, signOut } = useAuthState();
+
 
   return (
     <aside className="hidden lg:flex fixed inset-y-0 left-0 w-64 flex-col border-r border-border bg-[#0d0d13]/80 backdrop-blur-xl z-40">
@@ -104,9 +111,58 @@ export function Sidebar() {
             </div>
           </div>
         </div>
+
+        <div className="mt-3">
+          {signedIn ? (
+            <button
+              onClick={signOut}
+              className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-white/[0.04] transition"
+              title={email ?? undefined}
+            >
+              <LogOut className="w-4 h-4" />
+              <span className="truncate">Sign out</span>
+            </button>
+          ) : signedIn === false ? (
+            <Link
+              to="/auth"
+              className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm bg-brand-purple text-white hover:opacity-90 transition"
+            >
+              <LogIn className="w-4 h-4" />
+              Sign in
+            </Link>
+          ) : null}
+        </div>
       </div>
     </aside>
   );
+}
+
+function useAuthState() {
+  const navigate = useNavigate();
+  const qc = useQueryClient();
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setSignedIn(!!data.user);
+      setEmail(data.user?.email ?? null);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      setSignedIn(!!session?.user);
+      setEmail(session?.user?.email ?? null);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  async function signOut() {
+    await qc.cancelQueries();
+    qc.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
+
+  return { signedIn, email, signOut };
 }
 
 export function MobileTabBar() {

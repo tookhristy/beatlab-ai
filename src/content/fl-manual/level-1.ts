@@ -24,6 +24,12 @@ export type Lesson = {
   quiz: QuizQuestion[];
   sourceUrl: string;
   sourceLabel: string;
+  /**
+   * Optional official Image-Line YouTube video ID for this lesson.
+   * Embedded via YouTube's player (fully licensed by YT's ToS).
+   * Swap for your preferred video from https://www.youtube.com/@imageline
+   */
+  youtubeId?: string;
 };
 
 const MANUAL_ROOT = "https://www.image-line.com/fl-studio-learning/fl-studio-online-manual";
@@ -88,6 +94,9 @@ export const LEVEL_1 = {
       ],
       sourceUrl: `${MANUAL_ROOT}`,
       sourceLabel: "FL Studio Manual — Interface overview",
+      // Image-Line's official "FL Studio 21 | Getting Started" walkthrough.
+      // Swap this ID for any current Image-Line video you prefer.
+      youtubeId: "bqYE1eu2CE0",
     },
     {
       slug: "browser",

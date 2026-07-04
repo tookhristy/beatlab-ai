@@ -16,11 +16,13 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as PluginsRouteImport } from './routes/plugins'
 import { Route as BeatRecipesRouteImport } from './routes/beat-recipes'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AiProducerRouteImport } from './routes/ai-producer'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
-import { Route as LearnLevelRouteImport } from './routes/learn.$level'
-import { Route as LearnLevelLessonRouteImport } from './routes/learn.$level.$lesson'
+import { Route as AuthenticatedLearnLevelRouteImport } from './routes/_authenticated/learn.$level'
+import { Route as AuthenticatedLearnLevelLessonRouteImport } from './routes/_authenticated/learn.$level.$lesson'
 
 const TheoryRoute = TheoryRouteImport.update({
   id: '/theory',
@@ -57,9 +59,18 @@ const BeatRecipesRoute = BeatRecipesRouteImport.update({
   path: '/beat-recipes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AiProducerRoute = AiProducerRouteImport.update({
   id: '/ai-producer',
   path: '/ai-producer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -72,20 +83,22 @@ const LearnIndexRoute = LearnIndexRouteImport.update({
   path: '/learn/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LearnLevelRoute = LearnLevelRouteImport.update({
+const AuthenticatedLearnLevelRoute = AuthenticatedLearnLevelRouteImport.update({
   id: '/learn/$level',
   path: '/learn/$level',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const LearnLevelLessonRoute = LearnLevelLessonRouteImport.update({
-  id: '/$lesson',
-  path: '/$lesson',
-  getParentRoute: () => LearnLevelRoute,
-} as any)
+const AuthenticatedLearnLevelLessonRoute =
+  AuthenticatedLearnLevelLessonRouteImport.update({
+    id: '/$lesson',
+    path: '/$lesson',
+    getParentRoute: () => AuthenticatedLearnLevelRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ai-producer': typeof AiProducerRoute
+  '/auth': typeof AuthRoute
   '/beat-recipes': typeof BeatRecipesRoute
   '/plugins': typeof PluginsRoute
   '/practice': typeof PracticeRoute
@@ -93,13 +106,14 @@ export interface FileRoutesByFullPath {
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
-  '/learn/$level': typeof LearnLevelRouteWithChildren
   '/learn/': typeof LearnIndexRoute
-  '/learn/$level/$lesson': typeof LearnLevelLessonRoute
+  '/learn/$level': typeof AuthenticatedLearnLevelRouteWithChildren
+  '/learn/$level/$lesson': typeof AuthenticatedLearnLevelLessonRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-producer': typeof AiProducerRoute
+  '/auth': typeof AuthRoute
   '/beat-recipes': typeof BeatRecipesRoute
   '/plugins': typeof PluginsRoute
   '/practice': typeof PracticeRoute
@@ -107,14 +121,16 @@ export interface FileRoutesByTo {
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
-  '/learn/$level': typeof LearnLevelRouteWithChildren
   '/learn': typeof LearnIndexRoute
-  '/learn/$level/$lesson': typeof LearnLevelLessonRoute
+  '/learn/$level': typeof AuthenticatedLearnLevelRouteWithChildren
+  '/learn/$level/$lesson': typeof AuthenticatedLearnLevelLessonRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/ai-producer': typeof AiProducerRoute
+  '/auth': typeof AuthRoute
   '/beat-recipes': typeof BeatRecipesRoute
   '/plugins': typeof PluginsRoute
   '/practice': typeof PracticeRoute
@@ -122,15 +138,16 @@ export interface FileRoutesById {
   '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
-  '/learn/$level': typeof LearnLevelRouteWithChildren
   '/learn/': typeof LearnIndexRoute
-  '/learn/$level/$lesson': typeof LearnLevelLessonRoute
+  '/_authenticated/learn/$level': typeof AuthenticatedLearnLevelRouteWithChildren
+  '/_authenticated/learn/$level/$lesson': typeof AuthenticatedLearnLevelLessonRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/ai-producer'
+    | '/auth'
     | '/beat-recipes'
     | '/plugins'
     | '/practice'
@@ -138,13 +155,14 @@ export interface FileRouteTypes {
     | '/progress'
     | '/settings'
     | '/theory'
-    | '/learn/$level'
     | '/learn/'
+    | '/learn/$level'
     | '/learn/$level/$lesson'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/ai-producer'
+    | '/auth'
     | '/beat-recipes'
     | '/plugins'
     | '/practice'
@@ -152,13 +170,15 @@ export interface FileRouteTypes {
     | '/progress'
     | '/settings'
     | '/theory'
-    | '/learn/$level'
     | '/learn'
+    | '/learn/$level'
     | '/learn/$level/$lesson'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/ai-producer'
+    | '/auth'
     | '/beat-recipes'
     | '/plugins'
     | '/practice'
@@ -166,14 +186,16 @@ export interface FileRouteTypes {
     | '/progress'
     | '/settings'
     | '/theory'
-    | '/learn/$level'
     | '/learn/'
-    | '/learn/$level/$lesson'
+    | '/_authenticated/learn/$level'
+    | '/_authenticated/learn/$level/$lesson'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AiProducerRoute: typeof AiProducerRoute
+  AuthRoute: typeof AuthRoute
   BeatRecipesRoute: typeof BeatRecipesRoute
   PluginsRoute: typeof PluginsRoute
   PracticeRoute: typeof PracticeRoute
@@ -181,7 +203,6 @@ export interface RootRouteChildren {
   ProgressRoute: typeof ProgressRoute
   SettingsRoute: typeof SettingsRoute
   TheoryRoute: typeof TheoryRoute
-  LearnLevelRoute: typeof LearnLevelRouteWithChildren
   LearnIndexRoute: typeof LearnIndexRoute
 }
 
@@ -236,11 +257,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BeatRecipesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ai-producer': {
       id: '/ai-producer'
       path: '/ai-producer'
       fullPath: '/ai-producer'
       preLoaderRoute: typeof AiProducerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -257,38 +292,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/learn/$level': {
-      id: '/learn/$level'
+    '/_authenticated/learn/$level': {
+      id: '/_authenticated/learn/$level'
       path: '/learn/$level'
       fullPath: '/learn/$level'
-      preLoaderRoute: typeof LearnLevelRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedLearnLevelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/learn/$level/$lesson': {
-      id: '/learn/$level/$lesson'
+    '/_authenticated/learn/$level/$lesson': {
+      id: '/_authenticated/learn/$level/$lesson'
       path: '/$lesson'
       fullPath: '/learn/$level/$lesson'
-      preLoaderRoute: typeof LearnLevelLessonRouteImport
-      parentRoute: typeof LearnLevelRoute
+      preLoaderRoute: typeof AuthenticatedLearnLevelLessonRouteImport
+      parentRoute: typeof AuthenticatedLearnLevelRoute
     }
   }
 }
 
-interface LearnLevelRouteChildren {
-  LearnLevelLessonRoute: typeof LearnLevelLessonRoute
+interface AuthenticatedLearnLevelRouteChildren {
+  AuthenticatedLearnLevelLessonRoute: typeof AuthenticatedLearnLevelLessonRoute
 }
 
-const LearnLevelRouteChildren: LearnLevelRouteChildren = {
-  LearnLevelLessonRoute: LearnLevelLessonRoute,
+const AuthenticatedLearnLevelRouteChildren: AuthenticatedLearnLevelRouteChildren =
+  {
+    AuthenticatedLearnLevelLessonRoute: AuthenticatedLearnLevelLessonRoute,
+  }
+
+const AuthenticatedLearnLevelRouteWithChildren =
+  AuthenticatedLearnLevelRoute._addFileChildren(
+    AuthenticatedLearnLevelRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedLearnLevelRoute: typeof AuthenticatedLearnLevelRouteWithChildren
 }
 
-const LearnLevelRouteWithChildren = LearnLevelRoute._addFileChildren(
-  LearnLevelRouteChildren,
-)
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedLearnLevelRoute: AuthenticatedLearnLevelRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AiProducerRoute: AiProducerRoute,
+  AuthRoute: AuthRoute,
   BeatRecipesRoute: BeatRecipesRoute,
   PluginsRoute: PluginsRoute,
   PracticeRoute: PracticeRoute,
@@ -296,7 +346,6 @@ const rootRouteChildren: RootRouteChildren = {
   ProgressRoute: ProgressRoute,
   SettingsRoute: SettingsRoute,
   TheoryRoute: TheoryRoute,
-  LearnLevelRoute: LearnLevelRouteWithChildren,
   LearnIndexRoute: LearnIndexRoute,
 }
 export const routeTree = rootRouteImport

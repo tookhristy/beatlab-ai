@@ -4,17 +4,27 @@ import { CheckCircle2, XCircle, Zap } from "lucide-react";
 import type { QuizQuestion } from "@/content/fl-manual/level-1";
 import { cn } from "@/lib/utils";
 
+export type QuizResult = {
+  score: number;
+  total: number;
+  passed: boolean;
+  answers: number[];
+};
+
 export function QuizBlock({
   questions,
   onPass,
+  onAttempt,
   xp,
 }: {
   questions: QuizQuestion[];
   onPass: () => void;
+  onAttempt?: (result: QuizResult) => void;
   xp: number;
 }) {
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
+  const [answers, setAnswers] = useState<number[]>([]);
   const [correctCount, setCorrectCount] = useState(0);
   const [done, setDone] = useState(false);
   const [xpShown, setXpShown] = useState(0);
@@ -24,12 +34,14 @@ export function QuizBlock({
 
   function next() {
     const nextCorrect = correctCount + (isCorrect ? 1 : 0);
+    const nextAnswers = [...answers, picked ?? -1];
     if (idx === questions.length - 1) {
       const passed = nextCorrect === questions.length;
       setDone(true);
+      setAnswers(nextAnswers);
+      onAttempt?.({ score: nextCorrect, total: questions.length, passed, answers: nextAnswers });
       if (passed) {
         onPass();
-        // XP count up
         const target = xp;
         let cur = 0;
         const step = Math.max(1, Math.round(target / 30));
@@ -43,6 +55,7 @@ export function QuizBlock({
       return;
     }
     setCorrectCount(nextCorrect);
+    setAnswers(nextAnswers);
     setIdx(idx + 1);
     setPicked(null);
   }
@@ -50,6 +63,7 @@ export function QuizBlock({
   function retry() {
     setIdx(0);
     setPicked(null);
+    setAnswers([]);
     setCorrectCount(0);
     setDone(false);
     setXpShown(0);
