@@ -22,7 +22,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as AuthenticatedProgressRouteImport } from './routes/_authenticated/progress'
 import { Route as AuthenticatedLearnLevelRouteImport } from './routes/_authenticated/learn.$level'
-import { Route as AuthenticatedLearnLevelLessonRouteImport } from './routes/_authenticated/learn.$level.$lesson'
+import { Route as AuthenticatedLearnLevelLessonRouteImport } from './routes/_authenticated/learn.$level_.$lesson'
 
 const TheoryRoute = TheoryRouteImport.update({
   id: '/theory',
@@ -90,9 +90,9 @@ const AuthenticatedLearnLevelRoute = AuthenticatedLearnLevelRouteImport.update({
 } as any)
 const AuthenticatedLearnLevelLessonRoute =
   AuthenticatedLearnLevelLessonRouteImport.update({
-    id: '/$lesson',
-    path: '/$lesson',
-    getParentRoute: () => AuthenticatedLearnLevelRoute,
+    id: '/learn/$level_/$lesson',
+    path: '/learn/$level/$lesson',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -107,7 +107,7 @@ export interface FileRoutesByFullPath {
   '/theory': typeof TheoryRoute
   '/progress': typeof AuthenticatedProgressRoute
   '/learn/': typeof LearnIndexRoute
-  '/learn/$level': typeof AuthenticatedLearnLevelRouteWithChildren
+  '/learn/$level': typeof AuthenticatedLearnLevelRoute
   '/learn/$level/$lesson': typeof AuthenticatedLearnLevelLessonRoute
 }
 export interface FileRoutesByTo {
@@ -122,7 +122,7 @@ export interface FileRoutesByTo {
   '/theory': typeof TheoryRoute
   '/progress': typeof AuthenticatedProgressRoute
   '/learn': typeof LearnIndexRoute
-  '/learn/$level': typeof AuthenticatedLearnLevelRouteWithChildren
+  '/learn/$level': typeof AuthenticatedLearnLevelRoute
   '/learn/$level/$lesson': typeof AuthenticatedLearnLevelLessonRoute
 }
 export interface FileRoutesById {
@@ -139,8 +139,8 @@ export interface FileRoutesById {
   '/theory': typeof TheoryRoute
   '/_authenticated/progress': typeof AuthenticatedProgressRoute
   '/learn/': typeof LearnIndexRoute
-  '/_authenticated/learn/$level': typeof AuthenticatedLearnLevelRouteWithChildren
-  '/_authenticated/learn/$level/$lesson': typeof AuthenticatedLearnLevelLessonRoute
+  '/_authenticated/learn/$level': typeof AuthenticatedLearnLevelRoute
+  '/_authenticated/learn/$level_/$lesson': typeof AuthenticatedLearnLevelLessonRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -188,7 +188,7 @@ export interface FileRouteTypes {
     | '/_authenticated/progress'
     | '/learn/'
     | '/_authenticated/learn/$level'
-    | '/_authenticated/learn/$level/$lesson'
+    | '/_authenticated/learn/$level_/$lesson'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -298,38 +298,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLearnLevelRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/learn/$level/$lesson': {
-      id: '/_authenticated/learn/$level/$lesson'
-      path: '/$lesson'
+    '/_authenticated/learn/$level_/$lesson': {
+      id: '/_authenticated/learn/$level_/$lesson'
+      path: '/learn/$level/$lesson'
       fullPath: '/learn/$level/$lesson'
       preLoaderRoute: typeof AuthenticatedLearnLevelLessonRouteImport
-      parentRoute: typeof AuthenticatedLearnLevelRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
-interface AuthenticatedLearnLevelRouteChildren {
-  AuthenticatedLearnLevelLessonRoute: typeof AuthenticatedLearnLevelLessonRoute
-}
-
-const AuthenticatedLearnLevelRouteChildren: AuthenticatedLearnLevelRouteChildren =
-  {
-    AuthenticatedLearnLevelLessonRoute: AuthenticatedLearnLevelLessonRoute,
-  }
-
-const AuthenticatedLearnLevelRouteWithChildren =
-  AuthenticatedLearnLevelRoute._addFileChildren(
-    AuthenticatedLearnLevelRouteChildren,
-  )
-
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedProgressRoute: typeof AuthenticatedProgressRoute
-  AuthenticatedLearnLevelRoute: typeof AuthenticatedLearnLevelRouteWithChildren
+  AuthenticatedLearnLevelRoute: typeof AuthenticatedLearnLevelRoute
+  AuthenticatedLearnLevelLessonRoute: typeof AuthenticatedLearnLevelLessonRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProgressRoute: AuthenticatedProgressRoute,
-  AuthenticatedLearnLevelRoute: AuthenticatedLearnLevelRouteWithChildren,
+  AuthenticatedLearnLevelRoute: AuthenticatedLearnLevelRoute,
+  AuthenticatedLearnLevelLessonRoute: AuthenticatedLearnLevelLessonRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -351,3 +339,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

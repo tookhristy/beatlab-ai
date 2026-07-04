@@ -16,7 +16,7 @@ type LoaderData = {
   next: Lesson | null;
 };
 
-export const Route = createFileRoute("/_authenticated/learn/$level/$lesson")({
+export const Route = createFileRoute("/_authenticated/learn/$level_/$lesson")({
   head: ({ params, loaderData }) => {
     const data = loaderData as LoaderData | undefined;
     const title = data?.lesson.title ?? "Lesson";
