@@ -4,17 +4,27 @@ import { CheckCircle2, XCircle, Zap } from "lucide-react";
 import type { QuizQuestion } from "@/content/fl-manual/level-1";
 import { cn } from "@/lib/utils";
 
+export type QuizResult = {
+  score: number;
+  total: number;
+  passed: boolean;
+  answers: number[];
+};
+
 export function QuizBlock({
   questions,
   onPass,
+  onAttempt,
   xp,
 }: {
   questions: QuizQuestion[];
   onPass: () => void;
+  onAttempt?: (result: QuizResult) => void;
   xp: number;
 }) {
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
+  const [answers, setAnswers] = useState<number[]>([]);
   const [correctCount, setCorrectCount] = useState(0);
   const [done, setDone] = useState(false);
   const [xpShown, setXpShown] = useState(0);
