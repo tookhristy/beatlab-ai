@@ -24,6 +24,12 @@ export type Lesson = {
   quiz: QuizQuestion[];
   sourceUrl: string;
   sourceLabel: string;
+  /**
+   * Optional official Image-Line YouTube video ID for this lesson.
+   * Embedded via YouTube's player (fully licensed by YT's ToS).
+   * Swap for your preferred video from https://www.youtube.com/@imageline
+   */
+  youtubeId?: string;
 };
 
 const MANUAL_ROOT = "https://www.image-line.com/fl-studio-learning/fl-studio-online-manual";
