@@ -24,6 +24,8 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
+  const [awaitingConfirm, setAwaitingConfirm] = useState<string | null>(null);
+  const [needsConfirmForSignIn, setNeedsConfirmForSignIn] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -35,25 +37,57 @@ function AuthPage() {
     e.preventDefault();
     setErr(null);
     setMsg(null);
+    setNeedsConfirmForSignIn(false);
     setLoading(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: { emailRedirectTo: window.location.origin + "/auth" },
         });
         if (error) throw error;
-        setMsg("Account created. If email confirmation is required, check your inbox.");
-        const { data } = await supabase.auth.getUser();
-        if (data.user) navigate({ to: "/learn" });
+        // With email confirmation required, session is null until the user clicks the link.
+        if (!data.session) {
+          setAwaitingConfirm(email);
+        } else {
+          navigate({ to: "/learn" });
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        if (error) {
+          const notConfirmed =
+            /confirm/i.test(error.message) || (error as { code?: string }).code === "email_not_confirmed";
+          if (notConfirmed) {
+            setNeedsConfirmForSignIn(true);
+            setErr("Please confirm your email before signing in.");
+            return;
+          }
+          throw error;
+        }
         navigate({ to: "/learn" });
       }
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleResend(target: string) {
+    setErr(null);
+    setMsg(null);
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: target,
+        options: { emailRedirectTo: window.location.origin + "/auth" },
+      });
+      if (error) throw error;
+      setMsg(`Confirmation email re-sent to ${target}.`);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Could not resend confirmation email");
     } finally {
       setLoading(false);
     }
