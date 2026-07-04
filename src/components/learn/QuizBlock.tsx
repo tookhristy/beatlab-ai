@@ -34,12 +34,14 @@ export function QuizBlock({
 
   function next() {
     const nextCorrect = correctCount + (isCorrect ? 1 : 0);
+    const nextAnswers = [...answers, picked ?? -1];
     if (idx === questions.length - 1) {
       const passed = nextCorrect === questions.length;
       setDone(true);
+      setAnswers(nextAnswers);
+      onAttempt?.({ score: nextCorrect, total: questions.length, passed, answers: nextAnswers });
       if (passed) {
         onPass();
-        // XP count up
         const target = xp;
         let cur = 0;
         const step = Math.max(1, Math.round(target / 30));
@@ -53,6 +55,7 @@ export function QuizBlock({
       return;
     }
     setCorrectCount(nextCorrect);
+    setAnswers(nextAnswers);
     setIdx(idx + 1);
     setPicked(null);
   }
@@ -60,6 +63,7 @@ export function QuizBlock({
   function retry() {
     setIdx(0);
     setPicked(null);
+    setAnswers([]);
     setCorrectCount(0);
     setDone(false);
     setXpShown(0);
