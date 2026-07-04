@@ -96,7 +96,7 @@ export const LEVEL_1 = {
       sourceLabel: "FL Studio Manual — Interface overview",
       // Image-Line's official "FL Studio 21 | Getting Started" walkthrough.
       // Swap this ID for any current Image-Line video you prefer.
-      youtubeId: "bqYE1eu2CE0",
+      youtubeId: "S6PSYkXmKnY",
     },
     {
       slug: "browser",
