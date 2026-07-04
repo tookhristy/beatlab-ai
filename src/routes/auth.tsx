@@ -128,6 +128,11 @@ function AuthPage() {
                 <span className="text-foreground font-medium">{awaitingConfirm}</span>.
                 Click it to activate your account, then come back to sign in.
               </p>
+              <div className="mt-4 rounded-lg border border-brand-orange/30 bg-brand-orange/10 px-3 py-2 text-xs text-brand-orange text-left">
+                <span className="font-semibold">Don't see it?</span> Check your spam or
+                promotions folder — confirmation emails sometimes land there. Mark it as
+                "Not spam" so future emails come through.
+              </div>
               <button
                 onClick={() => handleResend(awaitingConfirm)}
                 disabled={loading}
