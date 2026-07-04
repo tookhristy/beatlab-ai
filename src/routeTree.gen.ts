@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TheoryRouteImport } from './routes/theory'
 import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as PluginsRouteImport } from './routes/plugins'
@@ -21,6 +20,7 @@ import { Route as AiProducerRouteImport } from './routes/ai-producer'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as AuthenticatedProgressRouteImport } from './routes/_authenticated/progress'
 import { Route as AuthenticatedLearnLevelRouteImport } from './routes/_authenticated/learn.$level'
 import { Route as AuthenticatedLearnLevelLessonRouteImport } from './routes/_authenticated/learn.$level.$lesson'
 
@@ -32,11 +32,6 @@ const TheoryRoute = TheoryRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProgressRoute = ProgressRouteImport.update({
-  id: '/progress',
-  path: '/progress',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -83,6 +78,11 @@ const LearnIndexRoute = LearnIndexRouteImport.update({
   path: '/learn/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedProgressRoute = AuthenticatedProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedLearnLevelRoute = AuthenticatedLearnLevelRouteImport.update({
   id: '/learn/$level',
   path: '/learn/$level',
@@ -103,9 +103,9 @@ export interface FileRoutesByFullPath {
   '/plugins': typeof PluginsRoute
   '/practice': typeof PracticeRoute
   '/profile': typeof ProfileRoute
-  '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
+  '/progress': typeof AuthenticatedProgressRoute
   '/learn/': typeof LearnIndexRoute
   '/learn/$level': typeof AuthenticatedLearnLevelRouteWithChildren
   '/learn/$level/$lesson': typeof AuthenticatedLearnLevelLessonRoute
@@ -118,9 +118,9 @@ export interface FileRoutesByTo {
   '/plugins': typeof PluginsRoute
   '/practice': typeof PracticeRoute
   '/profile': typeof ProfileRoute
-  '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
+  '/progress': typeof AuthenticatedProgressRoute
   '/learn': typeof LearnIndexRoute
   '/learn/$level': typeof AuthenticatedLearnLevelRouteWithChildren
   '/learn/$level/$lesson': typeof AuthenticatedLearnLevelLessonRoute
@@ -135,9 +135,9 @@ export interface FileRoutesById {
   '/plugins': typeof PluginsRoute
   '/practice': typeof PracticeRoute
   '/profile': typeof ProfileRoute
-  '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
+  '/_authenticated/progress': typeof AuthenticatedProgressRoute
   '/learn/': typeof LearnIndexRoute
   '/_authenticated/learn/$level': typeof AuthenticatedLearnLevelRouteWithChildren
   '/_authenticated/learn/$level/$lesson': typeof AuthenticatedLearnLevelLessonRoute
@@ -152,9 +152,9 @@ export interface FileRouteTypes {
     | '/plugins'
     | '/practice'
     | '/profile'
-    | '/progress'
     | '/settings'
     | '/theory'
+    | '/progress'
     | '/learn/'
     | '/learn/$level'
     | '/learn/$level/$lesson'
@@ -167,9 +167,9 @@ export interface FileRouteTypes {
     | '/plugins'
     | '/practice'
     | '/profile'
-    | '/progress'
     | '/settings'
     | '/theory'
+    | '/progress'
     | '/learn'
     | '/learn/$level'
     | '/learn/$level/$lesson'
@@ -183,9 +183,9 @@ export interface FileRouteTypes {
     | '/plugins'
     | '/practice'
     | '/profile'
-    | '/progress'
     | '/settings'
     | '/theory'
+    | '/_authenticated/progress'
     | '/learn/'
     | '/_authenticated/learn/$level'
     | '/_authenticated/learn/$level/$lesson'
@@ -200,7 +200,6 @@ export interface RootRouteChildren {
   PluginsRoute: typeof PluginsRoute
   PracticeRoute: typeof PracticeRoute
   ProfileRoute: typeof ProfileRoute
-  ProgressRoute: typeof ProgressRoute
   SettingsRoute: typeof SettingsRoute
   TheoryRoute: typeof TheoryRoute
   LearnIndexRoute: typeof LearnIndexRoute
@@ -220,13 +219,6 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/progress': {
-      id: '/progress'
-      path: '/progress'
-      fullPath: '/progress'
-      preLoaderRoute: typeof ProgressRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -292,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/progress': {
+      id: '/_authenticated/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof AuthenticatedProgressRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/learn/$level': {
       id: '/_authenticated/learn/$level'
       path: '/learn/$level'
@@ -324,10 +323,12 @@ const AuthenticatedLearnLevelRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedProgressRoute: typeof AuthenticatedProgressRoute
   AuthenticatedLearnLevelRoute: typeof AuthenticatedLearnLevelRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedProgressRoute: AuthenticatedProgressRoute,
   AuthenticatedLearnLevelRoute: AuthenticatedLearnLevelRouteWithChildren,
 }
 
@@ -343,7 +344,6 @@ const rootRouteChildren: RootRouteChildren = {
   PluginsRoute: PluginsRoute,
   PracticeRoute: PracticeRoute,
   ProfileRoute: ProfileRoute,
-  ProgressRoute: ProgressRoute,
   SettingsRoute: SettingsRoute,
   TheoryRoute: TheoryRoute,
   LearnIndexRoute: LearnIndexRoute,

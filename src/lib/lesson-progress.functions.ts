@@ -79,3 +79,58 @@ export const recordQuizAttempt = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const getUserStats = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: rows, error } = await context.supabase
+      .from("lesson_progress")
+      .select("level, lesson_slug, completed_at, xp_awarded")
+      .eq("user_id", context.userId)
+      .order("completed_at", { ascending: false });
+    if (error) throw new Error(error.message);
+
+    const completions = rows ?? [];
+    const totalXp = completions.reduce((s, r) => s + (r.xp_awarded ?? 0), 0);
+    const lessonsCompleted = completions.length;
+
+    // Group completion days (YYYY-MM-DD in UTC) into a set.
+    const dayKey = (iso: string) => new Date(iso).toISOString().slice(0, 10);
+    const daySet = new Set(completions.map((r) => dayKey(r.completed_at)));
+
+    // Streak: consecutive days ending today or yesterday.
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    let streak = 0;
+    const cursor = new Date(today);
+    if (!daySet.has(cursor.toISOString().slice(0, 10))) {
+      // allow streak to start from yesterday if no activity yet today
+      cursor.setUTCDate(cursor.getUTCDate() - 1);
+    }
+    while (daySet.has(cursor.toISOString().slice(0, 10))) {
+      streak += 1;
+      cursor.setUTCDate(cursor.getUTCDate() - 1);
+    }
+
+    // Weekly XP: last 7 days including today, oldest first.
+    const weekly: { date: string; xp: number }[] = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setUTCDate(d.getUTCDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      const xp = completions
+        .filter((r) => dayKey(r.completed_at) === key)
+        .reduce((s, r) => s + (r.xp_awarded ?? 0), 0);
+      weekly.push({ date: key, xp });
+    }
+
+    // XP per level for quick access.
+    const xpByLevel: Record<number, number> = {};
+    const doneByLevel: Record<number, number> = {};
+    for (const r of completions) {
+      xpByLevel[r.level] = (xpByLevel[r.level] ?? 0) + (r.xp_awarded ?? 0);
+      doneByLevel[r.level] = (doneByLevel[r.level] ?? 0) + 1;
+    }
+
+    return { totalXp, lessonsCompleted, streak, weekly, xpByLevel, doneByLevel };
+  });
