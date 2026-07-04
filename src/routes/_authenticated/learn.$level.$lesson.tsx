@@ -3,9 +3,10 @@ import { ArrowLeft, ArrowRight, ExternalLink, Sparkles, Keyboard, Target, BookOp
 import { AppShell } from "@/components/layout/AppShell";
 import { Card, Badge, Progress } from "@/components/ui-kit/primitives";
 import { LEVEL_1, type Lesson } from "@/content/fl-manual/level-1";
-import { useLevel1Progress } from "@/hooks/useLevel1Progress";
+import { useLevelProgress } from "@/hooks/useLevelProgress";
 import { QuizBlock } from "@/components/learn/QuizBlock";
 import { TryItChecklist } from "@/components/learn/TryItChecklist";
+import { LessonVideo } from "@/components/learn/LessonVideo";
 
 type LoaderData = {
   lesson: Lesson;
@@ -78,7 +79,7 @@ function LessonError({ error, reset }: { error: Error; reset: () => void }) {
 
 function LessonPage() {
   const { lesson, index, total, prev, next } = Route.useLoaderData() as LoaderData;
-  const { complete, isDone } = useLevel1Progress();
+  const { complete, recordAttempt, isDone } = useLevelProgress(1);
   const navigate = useNavigate();
   const pct = Math.round(((index + 1) / total) * 100);
   const done = isDone(lesson.slug);
@@ -115,6 +116,12 @@ function LessonPage() {
         </a>
       </div>
       <p className="mt-2 text-muted-foreground max-w-2xl">{lesson.short}</p>
+
+      {lesson.youtubeId && (
+        <div className="mt-6">
+          <LessonVideo youtubeId={lesson.youtubeId} title={lesson.title} />
+        </div>
+      )}
 
       <div className="mt-8 grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
@@ -158,7 +165,18 @@ function LessonPage() {
             <QuizBlock
               questions={lesson.quiz}
               xp={lesson.xp}
-              onPass={() => complete(lesson.slug)}
+              onPass={() => {
+                complete({ lessonSlug: lesson.slug, xp: lesson.xp }).catch(() => {});
+              }}
+              onAttempt={(result) => {
+                recordAttempt({
+                  lessonSlug: lesson.slug,
+                  score: result.score,
+                  total: result.total,
+                  passed: result.passed,
+                  answers: result.answers,
+                }).catch(() => {});
+              }}
             />
           </Card>
         </div>
