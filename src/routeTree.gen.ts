@@ -20,6 +20,7 @@ import { Route as AiProducerRouteImport } from './routes/ai-producer'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as AuthenticatedProgressRouteImport } from './routes/_authenticated/progress'
 import { Route as AuthenticatedLearnLevelRouteImport } from './routes/_authenticated/learn.$level'
 import { Route as AuthenticatedLearnLevelLessonRouteImport } from './routes/_authenticated/learn.$level.$lesson'
 
@@ -77,6 +78,11 @@ const LearnIndexRoute = LearnIndexRouteImport.update({
   path: '/learn/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedProgressRoute = AuthenticatedProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedLearnLevelRoute = AuthenticatedLearnLevelRouteImport.update({
   id: '/learn/$level',
   path: '/learn/$level',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
+  '/progress': typeof AuthenticatedProgressRoute
   '/learn/': typeof LearnIndexRoute
   '/learn/$level': typeof AuthenticatedLearnLevelRouteWithChildren
   '/learn/$level/$lesson': typeof AuthenticatedLearnLevelLessonRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
+  '/progress': typeof AuthenticatedProgressRoute
   '/learn': typeof LearnIndexRoute
   '/learn/$level': typeof AuthenticatedLearnLevelRouteWithChildren
   '/learn/$level/$lesson': typeof AuthenticatedLearnLevelLessonRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
+  '/_authenticated/progress': typeof AuthenticatedProgressRoute
   '/learn/': typeof LearnIndexRoute
   '/_authenticated/learn/$level': typeof AuthenticatedLearnLevelRouteWithChildren
   '/_authenticated/learn/$level/$lesson': typeof AuthenticatedLearnLevelLessonRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/settings'
     | '/theory'
+    | '/progress'
     | '/learn/'
     | '/learn/$level'
     | '/learn/$level/$lesson'
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/settings'
     | '/theory'
+    | '/progress'
     | '/learn'
     | '/learn/$level'
     | '/learn/$level/$lesson'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/settings'
     | '/theory'
+    | '/_authenticated/progress'
     | '/learn/'
     | '/_authenticated/learn/$level'
     | '/_authenticated/learn/$level/$lesson'
@@ -272,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/progress': {
+      id: '/_authenticated/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof AuthenticatedProgressRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/learn/$level': {
       id: '/_authenticated/learn/$level'
       path: '/learn/$level'
@@ -304,10 +323,12 @@ const AuthenticatedLearnLevelRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedProgressRoute: typeof AuthenticatedProgressRoute
   AuthenticatedLearnLevelRoute: typeof AuthenticatedLearnLevelRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedProgressRoute: AuthenticatedProgressRoute,
   AuthenticatedLearnLevelRoute: AuthenticatedLearnLevelRouteWithChildren,
 }
 
