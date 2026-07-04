@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TheoryRouteImport } from './routes/theory'
 import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as PluginsRouteImport } from './routes/plugins'
@@ -32,11 +31,6 @@ const TheoryRoute = TheoryRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProgressRoute = ProgressRouteImport.update({
-  id: '/progress',
-  path: '/progress',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -103,7 +97,6 @@ export interface FileRoutesByFullPath {
   '/plugins': typeof PluginsRoute
   '/practice': typeof PracticeRoute
   '/profile': typeof ProfileRoute
-  '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
   '/learn/': typeof LearnIndexRoute
@@ -118,7 +111,6 @@ export interface FileRoutesByTo {
   '/plugins': typeof PluginsRoute
   '/practice': typeof PracticeRoute
   '/profile': typeof ProfileRoute
-  '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
   '/learn': typeof LearnIndexRoute
@@ -135,7 +127,6 @@ export interface FileRoutesById {
   '/plugins': typeof PluginsRoute
   '/practice': typeof PracticeRoute
   '/profile': typeof ProfileRoute
-  '/progress': typeof ProgressRoute
   '/settings': typeof SettingsRoute
   '/theory': typeof TheoryRoute
   '/learn/': typeof LearnIndexRoute
@@ -152,7 +143,6 @@ export interface FileRouteTypes {
     | '/plugins'
     | '/practice'
     | '/profile'
-    | '/progress'
     | '/settings'
     | '/theory'
     | '/learn/'
@@ -167,7 +157,6 @@ export interface FileRouteTypes {
     | '/plugins'
     | '/practice'
     | '/profile'
-    | '/progress'
     | '/settings'
     | '/theory'
     | '/learn'
@@ -183,7 +172,6 @@ export interface FileRouteTypes {
     | '/plugins'
     | '/practice'
     | '/profile'
-    | '/progress'
     | '/settings'
     | '/theory'
     | '/learn/'
@@ -200,7 +188,6 @@ export interface RootRouteChildren {
   PluginsRoute: typeof PluginsRoute
   PracticeRoute: typeof PracticeRoute
   ProfileRoute: typeof ProfileRoute
-  ProgressRoute: typeof ProgressRoute
   SettingsRoute: typeof SettingsRoute
   TheoryRoute: typeof TheoryRoute
   LearnIndexRoute: typeof LearnIndexRoute
@@ -220,13 +207,6 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/progress': {
-      id: '/progress'
-      path: '/progress'
-      fullPath: '/progress'
-      preLoaderRoute: typeof ProgressRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -343,7 +323,6 @@ const rootRouteChildren: RootRouteChildren = {
   PluginsRoute: PluginsRoute,
   PracticeRoute: PracticeRoute,
   ProfileRoute: ProfileRoute,
-  ProgressRoute: ProgressRoute,
   SettingsRoute: SettingsRoute,
   TheoryRoute: TheoryRoute,
   LearnIndexRoute: LearnIndexRoute,
