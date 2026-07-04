@@ -35,6 +35,8 @@ const nav = [
 
 export function Sidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { signedIn, email, signOut } = useAuthState();
+
 
   return (
     <aside className="hidden lg:flex fixed inset-y-0 left-0 w-64 flex-col border-r border-border bg-[#0d0d13]/80 backdrop-blur-xl z-40">
